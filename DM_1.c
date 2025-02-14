@@ -98,6 +98,73 @@ void affiche_liste_renversee(Liste lst){
     return ;
 }
 
+File initialisation(void) {
+    /*
+     Initialise une Queue vide sur le tas.
+     Return:
+     File: pointeur sur la Queue initialisée, NULL en cas d'échec
+     */
+    File f = (File) malloc(sizeof(Queue));
+    if (f) {
+        f->debut = NULL;
+        f->fin = NULL;
+        f->taille = 0;
+    }
+    return f;
+}
+
+int est_vide(File f) {
+    /*
+     Vérifie si la file est vide.
+     Return:
+     int: 1 si la file est vide, 0 sinon
+     */
+    return (f == NULL || f->debut == NULL);
+}
+
+int enfiler(File f, Noeud * n) {
+    /*
+     Fait rentrer le pointeur n dans la file f.
+     Return:
+     int: 1 si l'opération a réussi, 0 sinon
+     */
+    if (f == NULL) return 0;
+    
+    Cellule * nouvelle = alloue_cellule(n);
+    if (nouvelle == NULL) return 0;
+    
+    if (f->fin == NULL) {  
+        f->debut = nouvelle;
+        f->fin = nouvelle;
+    } else {
+        f->fin->suivant = nouvelle;
+        f->fin = nouvelle;
+    }
+    f->taille++;
+    return 1;
+}
+
+int defiler(File f, Noeud ** sortant) {
+    /*
+     Fait sortir de la file f un pointeur sur un nœud et le stocke à l'adresse sortant.
+     Return:
+     int: 1 si une adresse a été retirée, 0 sinon
+     */
+    if (f == NULL || est_vide(f) || sortant == NULL) return 0;
+    
+    Cellule * premiere = f->debut;
+    *sortant = premiere->noeud;
+    
+    f->debut = premiere->suivant;
+    if (f->debut == NULL) { 
+        f->fin = NULL;
+    }
+    
+    f->taille--;
+    free(premiere);
+    return 1;
+}
+
 File initialisation(void);
 int est_vide(File f);
 int enfiler(File f, Noeud * n);
