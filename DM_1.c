@@ -153,7 +153,7 @@ int defiler(File f, Noeud ** sortant) {
     if (f == NULL || est_vide(f) || sortant == NULL) return 0;
     
     Cellule * premiere = f->debut;
-    *sortant = premiere->noeud;
+    sortant = &(premiere->n);
     
     f->debut = premiere->suivant;
     if (f->debut == NULL) { 
