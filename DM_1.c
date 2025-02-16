@@ -104,13 +104,13 @@ File initialisation(void) {
      Return:
      File: pointeur sur la Queue initialisée, NULL en cas d'échec
      */
-    File f = (File) malloc(sizeof(Queue));
-    if (f) {
-        f->debut = NULL;
-        f->fin = NULL;
-        f->taille = 0;
+    Queue * pqueue = (Queue*) malloc(sizeof(Queue));
+    if (pqueue) {
+        pqueue->debut = NULL;
+        pqueue->fin = NULL;
+        pqueue->taille = 0;
     }
-    return f;
+    return pqueue;
 }
 
 int est_vide(File f) {
@@ -165,15 +165,12 @@ int defiler(File f, Noeud ** sortant) {
     return 1;
 }
 
-File initialisation(void);
-int est_vide(File f);
-int enfiler(File f, Noeud * n);
-int defiler(File f, Noeud ** sortant);
-Noeud * alloue_noeud(int val, Arbre fg, Arbre fd);
-int construit_complet(int h, Arbre * a);
-int construit_filiforme_aleatoire(int h, Arbre * a, int graine);
+int construit_complet(int h, Arbre * a){
+    return ;
 
-int main(){
+}
+
+Liste test_liste(void){
     Noeud * n = alloue_noeud(10, NULL, NULL);
     Noeud * n1 = alloue_noeud(4, NULL, NULL);
     Noeud * n2 = alloue_noeud(6, NULL, NULL);
@@ -187,5 +184,17 @@ int main(){
     //affiche_liste_renversee(l);
     extrait_tete(&l);
     //affiche_liste_renversee(l);
+    return l;
+}
+
+int main(){
+    Liste liste_test = test_liste();
+    File f = initialisation();
+    printf("%d \n", est_vide(f));
+    enfiler(f, liste_test->n);
+    printf("%d \n", est_vide(f));
+    Noeud * sortie = alloue_noeud(0, NULL, NULL);
+    defiler(f, &sortie);
+    printf("%d \n", est_vide(f));
     return 0;
 }
