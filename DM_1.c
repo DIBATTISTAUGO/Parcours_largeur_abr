@@ -165,8 +165,91 @@ int defiler(File f, Noeud ** sortant) {
     return 1;
 }
 
-int construit_complet(int h, Arbre * a){
-    return ;
+int construit_complet(int h, Arbre * a) {
+    /*
+     Construit dans *a l'arbre complet de hauteur h avec un parcours en largeur
+     de 1 à 2^(h+1) - 1.
+     Return:
+     int: 1 si l'arbre a été correctement construit, 0 sinon
+     */
+    if (h < 0 || a == NULL) return 0;
+    
+    int nb_noeuds = pow(2, h + 1) - 1;
+    int valeur_courante = 1;
+
+    Noeud ** noeuds = (Noeud **)malloc(sizeof(Noeud *) * (nb_noeuds + 1));
+    if (noeuds == NULL) return 0;
+    
+    for (int i = 1; i <= nb_noeuds; i++) {
+        noeuds[i] = alloue_noeud(valeur_courante++, NULL, NULL);
+        if (noeuds[i] == NULL) {
+            
+            for (int j = 1; j < i; j++) {
+                free(noeuds[j]);
+            }
+            free(noeuds);
+            return 0;
+        }
+    }
+    
+    // Construction des liens entre les nœuds
+    for (int i = 1; i <= nb_noeuds / 2; i++) {
+        int fg_index = 2 * i;
+        int fd_index = 2 * i + 1;
+        
+        if (fg_index <= nb_noeuds) {
+            noeuds[i]->fg = noeuds[fg_index];
+        }
+        if (fd_index <= nb_noeuds) {
+            noeuds[i]->fd = noeuds[fd_index];
+        }
+    }
+    
+    *a = noeuds[1]; 
+    free(noeuds);    
+    return 1;
+}
+
+int construit_filiforme_aleatoire(int h, Arbre * a, int graine) {
+     /*
+     Construit en mémoire un arbre filiforme de forme aléatoire avec un
+     parcours en profondeur préfixe de 1 à h+1.
+     Return:
+     int: 1 si l'arbre a été correctement construit, 0 sinon
+     */
+    if (h < 0) {
+        *a = NULL;
+        return 1;
+    }
+
+    srand(graine);
+    int val = 1;
+
+    *a = alloue_noeud(val++, NULL, NULL);
+    if (*a == NULL) return 0;
+
+    if (h > 0) {
+        if (rand() % 2) {
+            if (!construit_filiforme_aleatoire(h-1, &((*a)->fg), graine+1)) {
+                free(*a);
+                return 0;
+            }
+        } else {
+            if (!construit_filiforme_aleatoire(h-1, &((*a)->fd), graine+1)) {
+                free(*a);
+                return 0;
+            }
+        }
+    }
+
+    return 1;
+}
+
+void affiche_arbre(Noeud *a) {
+    if (a == NULL) return;
+    printf("%d ", a->valeur);
+    affiche_arbre(a->fg);
+    affiche_arbre(a->fd);
 
 }
 
