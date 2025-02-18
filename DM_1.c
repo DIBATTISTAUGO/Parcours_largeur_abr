@@ -71,6 +71,13 @@ Cellule * extrait_tete(Liste * l){
 }
 
 void affichage_noeud(Noeud * n){
+    /*
+Affiche sur la sortie standard la structure de l'arbre binaire représenté 
+par le nœud racine n.
+
+Return:
+    void
+*/
     if (!n)return ;
     printf("{%d", n->valeur);
     affichage_noeud(n->fg);
