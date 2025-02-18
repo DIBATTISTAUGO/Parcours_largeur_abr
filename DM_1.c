@@ -210,8 +210,9 @@ int construit_complet(int h, Arbre * a) {
     return 1;
 }
 
-int construit_filiforme_aleatoire(int h, Arbre * a, int graine) {
-     /*
+
+int construit_filiforme_aleatoire(int h, Arbre *a, int graine) {
+    /*
      Construit en mémoire un arbre filiforme de forme aléatoire avec un
      parcours en profondeur préfixe de 1 à h+1.
      Return:
@@ -222,21 +223,19 @@ int construit_filiforme_aleatoire(int h, Arbre * a, int graine) {
         return 1;
     }
 
-    srand(graine);
-    int val = 1;
-
-    *a = alloue_noeud(val++, NULL, NULL);
+    *a = alloue_noeud(graine, NULL, NULL);
+    (graine)++;
     if (*a == NULL) return 0;
 
     if (h > 0) {
         if (rand() % 2) {
-            if (!construit_filiforme_aleatoire(h-1, &((*a)->fg), graine+1)) {
-                free(*a);
+            if (!construit_filiforme_aleatoire(h - 1, &((*a)->fg), graine)) {
+                libere_arbre(*a);
                 return 0;
             }
         } else {
-            if (!construit_filiforme_aleatoire(h-1, &((*a)->fd), graine+1)) {
-                free(*a);
+            if (!construit_filiforme_aleatoire(h - 1, &((*a)->fd), graine)) {
+                libere_arbre(*a);
                 return 0;
             }
         }
@@ -244,6 +243,7 @@ int construit_filiforme_aleatoire(int h, Arbre * a, int graine) {
 
     return 1;
 }
+
 
 void affiche_arbre(Noeud *a) {
     if (a == NULL) return;
