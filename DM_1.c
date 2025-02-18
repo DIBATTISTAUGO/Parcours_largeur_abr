@@ -37,9 +37,8 @@ Cellule * alloue_cellule(Noeud * n){
     */
    Cellule * pcell = (Cellule*) malloc(sizeof(Cellule));
     if(pcell){
-        pcell->n = n;
+        pcell->noeud = n;
         pcell->suivant = NULL;
-        pcell->precedent = NULL;
     }
    return pcell;
 }
@@ -52,9 +51,7 @@ void insere_en_tete(Liste * l, Cellule * c){
     */
     if (l != NULL){
         c->suivant = *l;
-        (*l)->precedent = c;
     }
-    c->precedent = NULL;
     *l = c;
    return ;
 }
@@ -93,7 +90,7 @@ void affiche_liste_renversee(Liste lst){
     //     affichage_noeud(lst->n);
     // }
     affiche_liste_renversee(lst->suivant);
-    affichage_noeud(lst->n);
+    affichage_noeud(lst->noeud);
     printf("\n");
     return ;
 }
@@ -153,7 +150,7 @@ int defiler(File f, Noeud ** sortant) {
     if (f == NULL || est_vide(f) || sortant == NULL) return 0;
     
     Cellule * premiere = f->debut;
-    sortant = &(premiere->n);
+    sortant = &(premiere->noeud);
     
     f->debut = premiere->suivant;
     if (f->debut == NULL) { 
@@ -208,6 +205,13 @@ int construit_complet(int h, Arbre * a) {
     *a = noeuds[1]; 
     free(noeuds);    
     return 1;
+}
+
+void libere_arbre(Arbre a) {
+    if (a == NULL) return;
+    libere_arbre(a->fg);
+    libere_arbre(a->fd);
+    free(a);
 }
 
 
