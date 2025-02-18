@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "DM_1.h"
-
+#include <math.h>
 /*Modèle doc fonction*/
 /*
 Description...
