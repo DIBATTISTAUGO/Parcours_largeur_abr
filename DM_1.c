@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "DM_1.h"
-#include <math.h>
 /*Modèle doc fonction*/
 /*
 Description...
@@ -169,6 +168,13 @@ int defiler(File f, Noeud ** sortant) {
     return 1;
 }
 
+int puissance(int a, int n) {
+    if (n == 0) {
+        return 1;
+    }
+    return a * puissance(a, n - 1);
+}
+
 int construit_complet(int h, Arbre * a) {
     /*
      Construit dans *a l'arbre complet de hauteur h avec un parcours en largeur
@@ -178,7 +184,7 @@ int construit_complet(int h, Arbre * a) {
      */
     if (h < 0 || a == NULL) return 0;
     
-    int nb_noeuds = pow(2, h + 1) - 1;
+    int nb_noeuds = puissance(2, h + 1) - 1;
     int valeur_courante = 1;
 
     Noeud ** noeuds = (Noeud **)malloc(sizeof(Noeud *) * (nb_noeuds + 1));
@@ -196,7 +202,6 @@ int construit_complet(int h, Arbre * a) {
         }
     }
     
-    // Construction des liens entre les nœuds
     for (int i = 1; i <= nb_noeuds / 2; i++) {
         int fg_index = 2 * i;
         int fd_index = 2 * i + 1;
@@ -262,6 +267,36 @@ void affiche_arbre(Noeud *a) {
     affiche_arbre(a->fg);
     affiche_arbre(a->fd);
 
+}
+
+int insere_niveau(Arbre a, int niv, Liste * lst) {
+    /*
+    Ajoute les nœuds de niveau `niv` de l'arbre `a` à la liste `lst`.
+    Return:
+        int: 1 si les nœuds ont été insérés, 0 en cas d'échec.
+    */
+    if (a==NULL) return 1;
+
+    if (niv == 0) {
+        Cellule * c = alloue_cellule(a);
+        if (c==NULL) return 0;
+        insere_en_tete(lst, c);
+        return 1;
+    }
+
+    if(insere_niveau(a->fg, niv - 1, lst)==0) return 0;
+    if(insere_niveau(a->fd, niv - 1, lst)==0) return 0;
+
+
+    return 1;
+}
+
+void afficher_liste(Liste lst) {
+    while (lst != NULL) {
+        printf("%d ", lst->noeud->valeur);
+        lst = lst->suivant;
+    }
+    printf("\n");
 }
 
 Liste test_liste(void){
